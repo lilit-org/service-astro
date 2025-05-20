@@ -1,4 +1,4 @@
-.PHONY: install install-dev server clean test lint server-dev server-dev-stop docker-logs server-prod server-prod-stop server-prod-curl
+.PHONY: install install-dev server clean test lint server-dev server-dev-stop docker-logs server-prod server-prod-stop curl api
 
 VENV := venv
 VENV_BIN := $(VENV)/bin
@@ -47,5 +47,5 @@ server-prod-stop:
 	docker stop lilit-astro-prod || true
 	docker rm lilit-astro-prod || true
 
-server-prod-curl:
-	curl -i http://localhost:8080/
+api:
+	$(PYTHON) scripts/generate_api_key.py

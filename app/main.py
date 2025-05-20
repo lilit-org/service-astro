@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers import ascendant, planets
+from app.middleware.auth import APIKeyMiddleware
 
 ########################################################
 #           Settings
@@ -13,6 +14,8 @@ app = FastAPI(
     description="API for performing astrological calculations",
     version="0.0.1",
 )
+
+app.add_middleware(APIKeyMiddleware)
 
 app.add_middleware(
     CORSMiddleware,

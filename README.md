@@ -2,13 +2,13 @@
 
 <br>
 
-> a python-based api service for performing astrological calculations using fastapi and ephem.
+> a python-based api service for performing astrological calculations.
 
 <br>
 
 ---
 
-## local development
+### local development
 
 <br>
 
@@ -44,7 +44,25 @@ interactive api documentation: [localhost:8000/docs](http://localhost:8000/docs)
 
 ---
 
-## prod setup
+### API authentication
+
+<br>
+
+> this service requires an API key for all endpoints except the documentation. 
+
+<br>
+
+to generate a new API key:
+
+```bash
+make generate-api-key
+```
+
+<br>
+
+---
+
+### prod setup
 
 <br>
 
