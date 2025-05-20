@@ -1,6 +1,7 @@
-from pydantic import BaseModel
 from datetime import datetime
 from typing import Dict
+
+from pydantic import BaseModel
 
 
 class DateTimeRequest(BaseModel):
@@ -24,4 +25,4 @@ class AscendantResponse(BaseModel):
     degrees: float
 
 
-PlanetaryPositionsResponse = Dict[str, PlanetPosition] 
+PlanetaryPositionsResponse = Dict[str, PlanetPosition]

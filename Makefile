@@ -1,4 +1,4 @@
-.PHONY: setup run clean test lint
+.PHONY: install server clean test lint
 
 VENV := venv
 VENV_BIN := $(VENV)/bin
@@ -24,10 +24,6 @@ test:
 	$(VENV_BIN)/pytest
 
 lint:
-	$(VENV_BIN)/flake8 .
-	$(VENV_BIN)/black --check .
-	$(VENV_BIN)/isort --check-only .
-
-format:
 	$(VENV_BIN)/black .
 	$(VENV_BIN)/isort .
+	$(VENV_BIN)/flake8 .

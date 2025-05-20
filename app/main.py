@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import ascendant, planets
 
+from app.routers import ascendant, planets
 
 ########################################################
 #           Settings
@@ -11,7 +11,7 @@ MESSAGE = "LILIT's astrological API"
 app = FastAPI(
     title=MESSAGE,
     description="API for performing astrological calculations",
-    version="0.0.1"
+    version="0.0.1",
 )
 
 app.add_middleware(
@@ -28,6 +28,7 @@ app.add_middleware(
 ########################################################
 app.include_router(planets.router)
 app.include_router(ascendant.router)
+
 
 @app.get("/")
 async def root():
