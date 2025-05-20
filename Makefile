@@ -3,6 +3,9 @@
 VENV := venv
 VENV_BIN := $(VENV)/bin
 PYTHON := python3.11
+HOST := 0.0.0.0
+PORT := 8000
+APP := app.main:app
 
 setup:
 	$(PYTHON) -m venv $(VENV)
@@ -10,7 +13,7 @@ setup:
 	$(VENV_BIN)/pip install -r requirements.txt
 
 server:
-	$(VENV_BIN)/python main.py
+	$(VENV_BIN)/uvicorn $(APP) --reload --host $(HOST) --port $(PORT)
 
 clean:
 	rm -rf $(VENV)
@@ -28,4 +31,3 @@ lint:
 format:
 	$(VENV_BIN)/black .
 	$(VENV_BIN)/isort .
-
