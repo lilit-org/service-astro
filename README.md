@@ -112,7 +112,8 @@ curl "http://localhost:8000/docs"
 <br>
 
 ```bash
-curl -H "API_KEY: <your-api-key>" "http://localhost:8000/planets"
+curl "http://localhost:8000/planets" -H "Content-Type: application/json" -H "API_KEY: <your-key>" -d '{"date_time": "1990-08-18T12:30:00", "latitude": -55.4284, "longitude": -19.2733}'
+
 ```    
 
 <br>
