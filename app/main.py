@@ -15,7 +15,7 @@ MESSAGE = "LILIT's astrological API"
 dotenv.load_dotenv()
 
 ALLOWED_ORIGINS: List[str] = os.getenv(
-    "ALLOWED_ORIGINS", "http://localhost:8000"
+    "ALLOWED_ORIGINS", ""
 ).split(",")
 
 app = FastAPI(
