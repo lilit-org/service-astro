@@ -1,7 +1,9 @@
 fastapi==0.109.2
 uvicorn==0.27.1
-pydantic==2.5.3
+pydantic==2.6.1
 ephem==4.1.4
+pyswisseph==2.10.3.2
+kerykeion==4.26.2
 
 # Development dependencies
 pytest==7.4.4

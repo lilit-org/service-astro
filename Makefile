@@ -9,7 +9,7 @@ setup:
 	$(VENV_BIN)/pip install --upgrade pip
 	$(VENV_BIN)/pip install -r requirements.txt
 
-run:
+server:
 	$(VENV_BIN)/python main.py
 
 clean:
