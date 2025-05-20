@@ -1,4 +1,4 @@
-.PHONY: install install-dev server server-dev server-prod logs kill curl key clean test lint 
+.PHONY: install install-dev server server-dev server-prod logs kill curl key clean test lint
 
 VENV := venv
 VENV_BIN := $(VENV)/bin
@@ -41,7 +41,7 @@ clean:
 	find . -type f -name "*.pyc" -delete
 
 test: install-dev
-	$(VENV_BIN)/pytest
+	$(VENV_BIN)/pytest --cov=app --cov-report=term-missing
 
 lint: install-dev
 	$(VENV_BIN)/black .
