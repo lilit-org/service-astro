@@ -107,7 +107,7 @@ make server-prod
 stop the service:
 
 ```bash
-make server-prod-stop
+make kill
 ```
 
 <br>
@@ -115,5 +115,5 @@ make server-prod-stop
 view logs:
 
 ```bash
-make docker-logs
+make logs
 ```

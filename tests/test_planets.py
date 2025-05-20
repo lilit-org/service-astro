@@ -4,9 +4,9 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 
-# Set test API key
 os.environ["API_KEY"] = "test_api_key"
-API_KEY_NAME = "zA5lvzxwOBLSbG0koNHU0g7flp9yfsHL"
+os.environ["API_KEY_NAME"] = "API_KEY"
+API_KEY_NAME = os.environ["API_KEY_NAME"]
 
 client = TestClient(app)
 

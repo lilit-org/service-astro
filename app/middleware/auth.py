@@ -5,7 +5,7 @@ from fastapi.security.api_key import APIKeyHeader
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 
-API_KEY_NAME = "zA5lvzxwOBLSbG0koNHU0g7flp9yfsHL"
+API_KEY_NAME = os.getenv("API_KEY_NAME", "API_KEY")
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=True)
 INVALID_API_KEY = "Invalid API Key"
 

@@ -9,6 +9,7 @@ from app.routers import ascendant, planets
 #           Settings
 ########################################################
 MESSAGE = "LILIT's astrological API"
+dotenv.load_dotenv()
 
 app = FastAPI(
     title=MESSAGE,
@@ -25,8 +26,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-dotenv.load_dotenv()
 
 ########################################################
 #           Endpoints
