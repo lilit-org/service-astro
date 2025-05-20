@@ -16,9 +16,7 @@ load_dotenv()
 #           Settings
 ########################################################
 RATE_LIMIT_WINDOW = int(os.environ.get("RATE_LIMIT_WINDOW", "3600"))
-MAX_REQUESTS_PER_WINDOW = int(
-    os.environ.get("MAX_REQUESTS_PER_WINDOW", "1000")
-)
+MAX_REQUESTS_PER_WINDOW = int(os.environ.get("MAX_REQUESTS_PER_WINDOW", "1000"))
 MAX_FAILED_ATTEMPTS = int(os.environ.get("MAX_FAILED_ATTEMPTS", "5"))
 BLOCK_DURATION = int(os.environ.get("BLOCK_DURATION", "300"))
 
@@ -46,10 +44,7 @@ def is_rate_limited(ip: str) -> bool:
     if now - data["window_start"] > RATE_LIMIT_WINDOW:
         data["count"] = 0
         data["window_start"] = now
-    if (
-        failed_attempts[ip]["blocked_until"]
-        and now < failed_attempts[ip]["blocked_until"]
-    ):
+    if failed_attempts[ip]["blocked_until"] and now < failed_attempts[ip]["blocked_until"]:
         return True
     data["count"] += 1
     return data["count"] > MAX_REQUESTS_PER_WINDOW
@@ -88,8 +83,7 @@ class APIKeyMiddleware(BaseHTTPMiddleware):
                 detail="Too many requests. Please try again later.",
             )
         api_key = (
-            request.query_params.get("API_KEY")
-            or request.headers.get("API_KEY")
+            request.query_params.get("API_KEY") or request.headers.get("API_KEY")
             if request.url.path == "/planets"
             else request.headers.get("API_KEY")
         )

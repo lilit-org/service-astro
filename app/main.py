@@ -16,9 +16,7 @@ dotenv.load_dotenv()
 
 # Get allowed origins from environment variable, default to empty list
 ALLOWED_ORIGINS: List[str] = (
-    os.getenv("ALLOWED_ORIGINS", "").split(",")
-    if os.getenv("ALLOWED_ORIGINS")
-    else []
+    os.getenv("ALLOWED_ORIGINS", "").split(",") if os.getenv("ALLOWED_ORIGINS") else []
 )
 
 app = FastAPI(
