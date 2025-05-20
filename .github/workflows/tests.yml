@@ -26,15 +26,6 @@ jobs:
             fi
           done < .env.example
 
-      - name: Set error message variables from .error_messages
-        run: |
-          while IFS='=' read -r key value; do
-            if [[ $key != \#* && -n $key ]]; then
-              value=$(echo "$value" | sed -e 's/^"//' -e 's/"$//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-              echo "$key=$value" >> $GITHUB_ENV
-            fi
-          done < .error_messages
-
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
