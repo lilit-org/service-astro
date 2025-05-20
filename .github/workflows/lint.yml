@@ -30,18 +30,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install black autoflake ruff
 
-    - name: Format with black
-      run: black --line-length 100 .
+    - name: Check formatting with black
+      run: black --check --line-length 100 .
 
     - name: Check for unused imports with autoflake
       run: autoflake --check --recursive --remove-all-unused-imports .
 
-    - name: Fix issues with ruff
-      run: ruff check . --fix
-
-    - name: Commit changes
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Apply automatic formatting" && git push)
+    - name: Check issues with ruff
+      run: ruff check .

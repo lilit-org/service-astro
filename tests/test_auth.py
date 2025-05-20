@@ -80,9 +80,9 @@ def test_api_key_validation(client, mock_env_vars):
     response = client.get("/planets", headers={"API_KEY": INVALID_API_KEY})
     assert response.status_code == 403
 
-    # Test with valid API key in query params for /planets
-    response = client.get(f"/planets?API_KEY={VALID_API_KEY}")
-    assert response.status_code == 200
+    # Test with no API key
+    response = client.get("/planets")
+    assert response.status_code == 403
 
 
 def test_rate_limiting():

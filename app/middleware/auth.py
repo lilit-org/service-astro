@@ -87,12 +87,7 @@ class APIKeyMiddleware(BaseHTTPMiddleware):
                 status_code=429,
                 detail="Too many requests. Please try again later.",
             )
-        api_key = (
-            request.query_params.get("API_KEY")
-            or request.headers.get("API_KEY")
-            if request.url.path == "/planets"
-            else request.headers.get("API_KEY")
-        )
+        api_key = request.headers.get("API_KEY")
         if not api_key or api_key not in self.valid_api_keys:
             record_failed_attempt(client_ip)
             return HTMLResponse(content=INVALID_API_TEMPLATE, status_code=403)

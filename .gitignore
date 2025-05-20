@@ -60,3 +60,4 @@ Pipfile
 # Docker
 .docker/
 docker-compose.override.yml
+.coverage
