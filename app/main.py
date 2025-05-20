@@ -14,9 +14,7 @@ from app.routers import ascendant, planets
 MESSAGE = "LILIT's astrological API"
 dotenv.load_dotenv()
 
-ALLOWED_ORIGINS: List[str] = os.getenv(
-    "ALLOWED_ORIGINS", ""
-).split(",")
+ALLOWED_ORIGINS: List[str] = os.getenv("ALLOWED_ORIGINS", "").split(",")
 
 app = FastAPI(
     title=MESSAGE,

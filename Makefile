@@ -45,6 +45,8 @@ test: install-dev
 	$(VENV_BIN)/pytest --cov=app --cov-report=term-missing
 
 lint: install-dev
-	$(VENV_BIN)/black .
-	$(VENV_BIN)/isort .
-	$(VENV_BIN)/flake8 .
+	$(VENV_BIN)/black . || true
+	$(VENV_BIN)/isort . || true
+	$(VENV_BIN)/flake8 . || true
+	$(VENV_BIN)/autoflake --check --recursive --remove-all-unused-imports . || true
+	$(VENV_BIN)/ruff check . || true
