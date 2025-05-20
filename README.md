@@ -60,7 +60,32 @@ make key
 
 <br>
 
-you can then add this key to `.env`.
+you can then add this key to `.env`. To support multiple API keys, add them as a comma-separated list in the `API_KEYS` environment variable:
+
+```bash
+API_KEYS=key1,key2,key3
+```
+
+<br>
+
+#### security Features
+
+<br>
+
+the API includes several security features:
+
+- rate limiting: 1000 requests per hour per IP
+- failed attempt tracking: IPs are temporarily blocked after 5 failed attempts
+- CORS protection: Only allows requests from specified origins
+- secure headers: Only allows necessary HTTP methods and headers
+
+<br>
+
+to configure allowed origins for CORS, set the `ALLOWED_ORIGINS` environment variable:
+
+```bash
+ALLOWED_ORIGINS=https://yourdomain.com,https://api.yourdomain.com
+```
 
 <br>
 

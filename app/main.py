@@ -1,3 +1,5 @@
+import os
+
 import dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,6 +13,13 @@ from app.routers import ascendant, planets
 MESSAGE = "LILIT's astrological API"
 dotenv.load_dotenv()
 
+# Get allowed origins from environment variable, default to empty list
+ALLOWED_ORIGINS = (
+    os.getenv("ALLOWED_ORIGINS", "").split(",")
+    if os.getenv("ALLOWED_ORIGINS")
+    else []
+)
+
 app = FastAPI(
     title=MESSAGE,
     description="API for performing astrological calculations",
@@ -21,10 +30,11 @@ app.add_middleware(APIKeyMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST"],  # Only allow necessary methods
+    allow_headers=["API_KEY", "Content-Type"],  # Only allow necessary headers
+    max_age=3600,  # Cache preflight requests for 1 hour
 )
 
 ########################################################
