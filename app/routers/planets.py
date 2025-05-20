@@ -9,6 +9,9 @@ from app.models import (
     PlanetPosition,
 )
 
+########################################################
+#           Constants
+########################################################
 SIGNS = [
     "Aries",
     "Taurus",
@@ -24,13 +27,22 @@ SIGNS = [
     "Pisces",
 ]
 
-router = APIRouter()
+ROUND_DECIMALS = 4
 
 
+########################################################
+#           Helper Functions
+########################################################
 def get_zodiac_sign(longitude: float) -> tuple[str, float]:
     sign_num = int(longitude / 30)
     degrees = longitude % 30
     return SIGNS[sign_num], degrees
+
+
+########################################################
+#           Router
+########################################################
+router = APIRouter()
 
 
 @router.get("/planets", response_model=PlanetaryPositionsResponse)
@@ -58,9 +70,10 @@ async def get_planetary_positions(request: DateTimeRequest = None):
     results = {}
     for name, planet in planets.items():
         planet.compute(observer)
-        sign, degrees = get_zodiac_sign(
-            ephem.Ecliptic(planet).lon * 180 / ephem.pi
+        longitude = ephem.Ecliptic(planet).lon * 180 / ephem.pi
+        sign, degrees = get_zodiac_sign(longitude)
+        results[name] = PlanetPosition(
+            sign=sign, degrees=round(degrees, ROUND_DECIMALS)
         )
-        results[name] = PlanetPosition(sign=sign, degrees=round(degrees, 2))
 
     return results
