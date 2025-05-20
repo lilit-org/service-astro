@@ -30,11 +30,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install black autoflake ruff
 
-    - name: Format with black
-      run: black --line-length 100 .
+    - name: Check formatting with black
+      run: black --check --line-length 100 .
 
     - name: Check for unused imports with autoflake
       run: autoflake --check --recursive --remove-all-unused-imports .
 
-    - name: Fix issues with ruff
-      run: ruff check . --fix
+    - name: Check issues with ruff
+      run: ruff check .
