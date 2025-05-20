@@ -48,9 +48,7 @@ router = APIRouter()
 @router.get("/planets", response_model=PlanetaryPositionsResponse)
 @router.post("/planets", response_model=PlanetaryPositionsResponse)
 async def get_planetary_positions(request: DateTimeRequest = None):
-    date_time = (
-        request.date_time if request and request.date_time else datetime.now()
-    )
+    date_time = request.date_time if request and request.date_time else datetime.now()
     observer = ephem.Observer()
     observer.date = date_time
 
@@ -72,8 +70,6 @@ async def get_planetary_positions(request: DateTimeRequest = None):
         planet.compute(observer)
         longitude = ephem.Ecliptic(planet).lon * 180 / ephem.pi
         sign, degrees = get_zodiac_sign(longitude)
-        results[name] = PlanetPosition(
-            sign=sign, degrees=round(degrees, ROUND_DECIMALS)
-        )
+        results[name] = PlanetPosition(sign=sign, degrees=round(degrees, ROUND_DECIMALS))
 
     return results
