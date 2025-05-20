@@ -110,7 +110,7 @@ curl "http://localhost:8000/docs"
 <br>
 
 ```bash
-curl "http://localhost:8000/planets?API_KEY"
+curl "http://localhost:8000/planets?API_KEY=<your-api>"
 ```    
 
 <br>

@@ -1,19 +1,17 @@
-import os
-
 from fastapi.testclient import TestClient
 
 from app.main import app
+from app.middleware.auth import APIKeyMiddleware
 
-os.environ["API_KEY"] = "test_api_key"
-os.environ["API_KEY_NAME"] = "API_KEY"
-API_KEY_NAME = os.environ["API_KEY_NAME"]
+# Mock the API key middleware to use our test key
+APIKeyMiddleware.valid_api_keys = ["test_api_key"]
 
 client = TestClient(app)
 
 
 def test_get_planets_current_time():
     """Test getting planetary positions for current time"""
-    response = client.get("/planets", headers={API_KEY_NAME: "test_api_key"})
+    response = client.get("/planets", headers={"API_KEY": "test_api_key"})
     assert response.status_code == 200
     data = response.json()
 
@@ -46,7 +44,7 @@ def test_get_planets_specific_time():
     response = client.post(
         "/planets",
         json={"date_time": test_time},
-        headers={API_KEY_NAME: "test_api_key"},
+        headers={"API_KEY": "test_api_key"},
     )
     assert response.status_code == 200
     data = response.json()
@@ -81,7 +79,7 @@ def test_get_planets_invalid_time():
     response = client.post(
         "/planets",
         json={"date_time": "invalid-time"},
-        headers={API_KEY_NAME: "test_api_key"},
+        headers={"API_KEY": "test_api_key"},
     )
     assert response.status_code == 422  # Validation error
 

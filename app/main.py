@@ -4,7 +4,7 @@ import dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.middleware.auth import API_KEY_NAME, APIKeyMiddleware
+from app.middleware.auth import APIKeyMiddleware
 from app.routers import ascendant, planets
 
 ########################################################
@@ -25,20 +25,18 @@ app = FastAPI(
     description="API for performing astrological calculations",
     version="0.0.1",
 )
-
 app.add_middleware(APIKeyMiddleware)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST"],  # Only allow necessary methods
+    allow_methods=["GET", "POST"],
     allow_headers=[
-        API_KEY_NAME,
+        "API_KEY",
         "Content-Type",
-    ],  # Use the same API key name from environment
-    expose_headers=[API_KEY_NAME],  # Expose the API key header
-    max_age=3600,  # Cache preflight requests for 1 hour
+    ],
+    expose_headers=["API_KEY"],
+    max_age=int(os.getenv("CORS_MAX_AGE", "3600")),
 )
 
 ########################################################
