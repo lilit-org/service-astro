@@ -38,10 +38,3 @@ jobs:
 
     - name: Fix issues with ruff
       run: ruff check . --fix
-
-    - name: Commit changes
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Apply automatic formatting" && git push)
