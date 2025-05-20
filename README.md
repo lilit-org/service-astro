@@ -1,54 +1,71 @@
-# Astrological Calculations API
+## LILIT's astrological API servrice
 
-A Python-based API service for performing astrological calculations using FastAPI and ephem.
+<br>
 
-## Requirements
+> a python-based api service for performing astrological calculations using fastapi and ephem.
 
-- Python 3.11 (required for compatibility with dependencies)
-- pip (Python package manager)
+<br>
 
-## Setup
+---
 
-1. Install Python 3.11 if not already installed:
+## local development
+
+<br>
+
+create a virtual environment and install depedencies:
+
 ```bash
-# On macOS with Homebrew:
-brew install python@3.11
+make install
+source venv/bin/activate
 ```
 
-2. Create a virtual environment (recommended):
+<br>
+
+to start the server (on [localhost:8000](http://localhost:8000)):
+
 ```bash
-python3.11 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+make server
 ```
 
-3. Install dependencies:
+<br>
+
+or, using docker:
+
 ```bash
-pip install -r requirements.txt
+make server-dev
+make server-dev-stop
 ```
 
-## Running the Server
+<br>
 
-To start the server:
+interactive api documentation: [localhost:8000/docs](http://localhost:8000/docs).
+
+<br>
+
+---
+
+## prod setup
+
+<br>
+
+run:
+
 ```bash
-python main.py
+make server-prod
 ```
 
-The server will start on `http://localhost:8000`
+<br>
 
-## API Documentation
+stop the service:
 
-Once the server is running, you can access:
-- Interactive API documentation: `http://localhost:8000/docs`
-- Alternative API documentation: `http://localhost:8000/redoc`
+```bash
+make server-prod-stop
+```
 
-## Available Endpoints
+<br>
 
-- `GET /`: Welcome message
-- `GET /health`: Health check endpoint
+view logs:
 
-## Dependencies
-
-- FastAPI: Web framework
-- Uvicorn: ASGI server
-- Ephem: Astronomical calculations
-- Pydantic: Data validation 
+```bash
+make docker-logs
+```
