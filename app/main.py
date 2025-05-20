@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 import dotenv
 from fastapi import FastAPI
@@ -14,7 +15,7 @@ MESSAGE = "LILIT's astrological API"
 dotenv.load_dotenv()
 
 # Get allowed origins from environment variable, default to empty list
-ALLOWED_ORIGINS = (
+ALLOWED_ORIGINS: List[str] = (
     os.getenv("ALLOWED_ORIGINS", "").split(",")
     if os.getenv("ALLOWED_ORIGINS")
     else []

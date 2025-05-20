@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LILIT - Not Authorized</title>
+    <style>
+        :root {
+            --light-primary: rgb(87, 76, 145);
+            --light-background: rgb(224, 222, 226);
+            --light-text: rgb(65, 62, 62);
+            --light-bearish: rgb(212, 116, 180);
+            --light-bullish: rgb(90, 192, 114);
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: var(--light-background);
+        }
+        .message {
+            text-align: center;
+            padding: 2.5rem;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 600px;
+            border: 2px solid var(--light-primary);
+        }
+        h1 {
+            color: var(--light-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        p {
+            color: var(--light-text);
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        .contact {
+            margin-top: 1.5rem;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--light-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            display: inline-block;
+            transition: opacity 0.2s;
+            font-size: 1.2rem;
+        }
+        .contact:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="message">
+        <h1>API key required for this service</h1>
+        <a href="#" class="contact" id="contactLink">contact us</a>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactLink = document.getElementById('contactLink');
+            const email = 'hello' + '@' + 'lilit.ai';
+            contactLink.href = 'mailto:' + email;
+        });
+    </script>
+</body>
+</html> 

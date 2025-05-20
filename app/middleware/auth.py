@@ -1,10 +1,12 @@
 import os
 import time
 from collections import defaultdict
+from pathlib import Path
+from typing import Any, Dict
 
 from dotenv import load_dotenv
-from fastapi import HTTPException, Security
-from fastapi.security.api_key import APIKeyHeader
+from fastapi import HTTPException
+from fastapi.responses import HTMLResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 
@@ -13,18 +15,26 @@ load_dotenv()
 ########################################################
 #           Settings
 ########################################################
-API_KEY_HEADER = APIKeyHeader(name="API_KEY", auto_error=True)
 RATE_LIMIT_WINDOW = int(os.environ.get("RATE_LIMIT_WINDOW", "3600"))
 MAX_REQUESTS_PER_WINDOW = int(
     os.environ.get("MAX_REQUESTS_PER_WINDOW", "1000")
 )
 MAX_FAILED_ATTEMPTS = int(os.environ.get("MAX_FAILED_ATTEMPTS", "5"))
 BLOCK_DURATION = int(os.environ.get("BLOCK_DURATION", "300"))
-INVALID_API_KEY = "Invalid API Key"
 
 # In-memory storage for rate limiting and failed attempts
-request_counts = defaultdict(lambda: {"count": 0, "window_start": time.time()})
-failed_attempts = defaultdict(lambda: {"count": 0, "blocked_until": None})
+request_counts: Dict[str, Dict[str, Any]] = defaultdict(
+    lambda: {"count": 0, "window_start": time.time()}
+)
+failed_attempts: Dict[str, Dict[str, Any]] = defaultdict(
+    lambda: {"count": 0, "blocked_until": None}
+)
+
+# Load the invalid API key template
+INVALID_API_TEMPLATE = Path("app/templates/invalid_api.html").read_text()
+
+# List of paths that don't require API key authentication
+PUBLIC_PATHS = {"/docs", "/openapi.json", "/"}
 
 
 ########################################################
@@ -45,7 +55,7 @@ def is_rate_limited(ip: str) -> bool:
     return data["count"] > MAX_REQUESTS_PER_WINDOW
 
 
-def record_failed_attempt(ip: str):
+def record_failed_attempt(ip: str) -> None:
     now = time.time()
     data = failed_attempts[ip]
     if data["blocked_until"] and now > data["blocked_until"]:
@@ -56,55 +66,34 @@ def record_failed_attempt(ip: str):
         data["blocked_until"] = now + BLOCK_DURATION
 
 
-async def get_api_key(api_key_header: str = Security(API_KEY_HEADER)):
-    if api_key_header not in APIKeyMiddleware.valid_api_keys:
-        raise HTTPException(status_code=403, detail=INVALID_API_KEY)
-    return api_key_header
-
-
 class APIKeyMiddleware(BaseHTTPMiddleware):
-    valid_api_keys = []
-    api_keys = os.getenv("API_KEYS", "")
-    if api_keys:
-        valid_api_keys = [key.strip() for key in api_keys.split(",")]
-    else:
+    def __init__(self, app):
+        super().__init__(app)
+        self.valid_api_keys = self._load_api_keys()
+
+    def _load_api_keys(self) -> list[str]:
+        api_keys = os.getenv("API_KEYS", "")
+        if api_keys:
+            return [key.strip() for key in api_keys.split(",")]
         single_key = os.getenv("API_KEY")
-        if single_key:
-            valid_api_keys = [single_key]
+        return [single_key] if single_key else []
 
     async def dispatch(self, request: Request, call_next):
-        if (
-            request.url.path == "/docs"
-            or request.url.path == "/openapi.json"
-            or request.url.path == "/"
-        ):
+        if request.url.path in PUBLIC_PATHS:
             return await call_next(request)
-
         client_ip = request.client.host if request.client else "unknown"
-
         if is_rate_limited(client_ip):
             raise HTTPException(
                 status_code=429,
                 detail="Too many requests. Please try again later.",
             )
-
-        api_key = None
-        if request.url.path == "/planets":
-            api_key = request.query_params.get("API_KEY")
-            if not api_key:
-                api_key = request.headers.get("API_KEY")
-        else:
-            api_key = request.headers.get("API_KEY")
-
-        if not api_key:
+        api_key = (
+            request.query_params.get("API_KEY")
+            or request.headers.get("API_KEY")
+            if request.url.path == "/planets"
+            else request.headers.get("API_KEY")
+        )
+        if not api_key or api_key not in self.valid_api_keys:
             record_failed_attempt(client_ip)
-            raise HTTPException(
-                status_code=403,
-                detail="API key is required.",
-            )
-
-        if api_key not in self.valid_api_keys:
-            record_failed_attempt(client_ip)
-            raise HTTPException(status_code=403, detail=INVALID_API_KEY)
-
+            return HTMLResponse(content=INVALID_API_TEMPLATE, status_code=403)
         return await call_next(request)

@@ -1,17 +1,29 @@
+import os
+from unittest.mock import patch
+
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.middleware.auth import APIKeyMiddleware
 
-# Mock the API key middleware to use our test key
-APIKeyMiddleware.valid_api_keys = ["test_api_key"]
-
-client = TestClient(app)
+# Test data
+TEST_API_KEY = "test_api_key"
 
 
-def test_get_planets_current_time():
+@pytest.fixture(autouse=True)
+def mock_env_vars():
+    with patch.dict(os.environ, {"API_KEY": TEST_API_KEY}):
+        yield
+
+
+@pytest.fixture
+def client():
+    return TestClient(app)
+
+
+def test_get_planets_current_time(client):
     """Test getting planetary positions for current time"""
-    response = client.get("/planets", headers={"API_KEY": "test_api_key"})
+    response = client.get("/planets", headers={"API_KEY": TEST_API_KEY})
     assert response.status_code == 200
     data = response.json()
 
@@ -38,13 +50,13 @@ def test_get_planets_current_time():
         assert 0 <= planet_data["degrees"] < 30
 
 
-def test_get_planets_specific_time():
+def test_get_planets_specific_time(client):
     """Test getting planetary positions for a specific time"""
     test_time = "2024-03-20T12:00:00"
     response = client.post(
         "/planets",
         json={"date_time": test_time},
-        headers={"API_KEY": "test_api_key"},
+        headers={"API_KEY": TEST_API_KEY},
     )
     assert response.status_code == 200
     data = response.json()
@@ -74,12 +86,12 @@ def test_get_planets_specific_time():
         assert 0 <= position["degrees"] < 30
 
 
-def test_get_planets_invalid_time():
+def test_get_planets_invalid_time(client):
     """Test getting planetary positions with invalid time format"""
     response = client.post(
         "/planets",
         json={"date_time": "invalid-time"},
-        headers={"API_KEY": "test_api_key"},
+        headers={"API_KEY": TEST_API_KEY},
     )
     assert response.status_code == 422  # Validation error
 
