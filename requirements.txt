@@ -1,0 +1,10 @@
+fastapi==0.109.2
+uvicorn==0.27.1
+pydantic==2.5.3
+ephem==4.1.4
+
+# Development dependencies
+pytest==7.4.4
+black==23.12.1
+flake8==7.0.0
+isort==5.13.2
