@@ -1,4 +1,6 @@
 ## LILIT's astrological API servrice
+[![lint](https://github.com/lilit-org/drusilla-py/actions/workflows/lint.yml/badge.svg)](https://github.com/lilit-org/service-astro/actions/workflows/lint.yml)
+[![tests](https://github.com/lilit-org/drusilla-py/actions/workflows/tests.yml/badge.svg)](https://github.com/lilit-org/service-astro/actions/workflows/tests.yml)
 
 <br>
 
