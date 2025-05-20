@@ -1,51 +1,59 @@
-name: 🔮 linting and testing
+name: Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  test-and-lint:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.11"]
+        python-version: ["3.10", "3.11"]
 
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-        
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -r requirements-dev.txt
-        
-    - name: Run black
-      run: |
-        black . --check
-        
-    - name: Run isort
-      run: |
-        isort . --check-only
-        
-    - name: Run flake8
-      run: |
-        flake8 .
-        
-    - name: Run tests with coverage
-      run: |
-        pytest --cov=. --cov-report=xml
-        
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      continue-on-error: true
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: false
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set environment variables from .env.example
+        run: |
+          while IFS='=' read -r key value; do
+            if [[ $key != \#* && -n $key ]]; then
+              value=$(echo "$value" | sed -e 's/^"//' -e 's/"$//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+              echo "$key=$value" >> $GITHUB_ENV
+            fi
+          done < .env.example
+
+      - name: Set error message variables from .error_messages
+        run: |
+          while IFS='=' read -r key value; do
+            if [[ $key != \#* && -n $key ]]; then
+              value=$(echo "$value" | sed -e 's/^"//' -e 's/"$//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+              echo "$key=$value" >> $GITHUB_ENV
+            fi
+          done < .error_messages
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          pip install pytest pytest-cov pytest-asyncio
+
+      - name: Test with pytest
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          pytest --cov --cov-branch --cov-report=xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
