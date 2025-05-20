@@ -99,15 +99,25 @@ class APIKeyMiddleware(BaseHTTPMiddleware):
             )
 
         # Get API key from appropriate location
+        api_key = None
         if request.url.path == "/planets":
+            # For planets endpoint, try query param first, then header
             api_key = request.query_params.get(API_KEY_NAME)
             if not api_key:
                 api_key = request.headers.get(API_KEY_NAME)
         else:
+            # For all other endpoints, only use header
             api_key = request.headers.get(API_KEY_NAME)
 
         # Validate API key
-        if not api_key or api_key not in get_valid_api_keys():
+        if not api_key:
+            record_failed_attempt(client_ip)
+            raise HTTPException(
+                status_code=403,
+                detail="API key is required.",
+            )
+
+        if api_key not in get_valid_api_keys():
             record_failed_attempt(client_ip)
             raise HTTPException(status_code=403, detail=INVALID_API_KEY)
 

@@ -68,16 +68,16 @@ API_KEYS=key1,key2,key3
 
 <br>
 
-#### security Features
+#### security features
 
 <br>
 
 the API includes several security features:
 
-- rate limiting: 1000 requests per hour per IP
-- failed attempt tracking: IPs are temporarily blocked after 5 failed attempts
-- CORS protection: Only allows requests from specified origins
-- secure headers: Only allows necessary HTTP methods and headers
+- rate limiting (requests per hour per IP)
+- failed attempt tracking (IPs are temporarily blocked after a number of failed attempts)
+- CORS protection (only allows requests from specified origins)
+- secure headers: (inly allows necessary HTTP methods and headers)
 
 <br>
 

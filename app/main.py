@@ -4,7 +4,7 @@ import dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.middleware.auth import APIKeyMiddleware
+from app.middleware.auth import API_KEY_NAME, APIKeyMiddleware
 from app.routers import ascendant, planets
 
 ########################################################
@@ -33,7 +33,11 @@ app.add_middleware(
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["GET", "POST"],  # Only allow necessary methods
-    allow_headers=["API_KEY", "Content-Type"],  # Only allow necessary headers
+    allow_headers=[
+        API_KEY_NAME,
+        "Content-Type",
+    ],  # Use the same API key name from environment
+    expose_headers=[API_KEY_NAME],  # Expose the API key header
     max_age=3600,  # Cache preflight requests for 1 hour
 )
 
