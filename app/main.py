@@ -1,10 +1,8 @@
 import os
-from typing import List
-
 import dotenv
+from typing import List
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from app.middleware.auth import APIKeyMiddleware
 from app.routers import ascendant, planets
 
@@ -14,11 +12,20 @@ from app.routers import ascendant, planets
 MESSAGE = "LILIT's astrological API"
 dotenv.load_dotenv()
 
-# Get allowed origins from environment variable, default to empty list
+## TODO: REMOVE THIS, ADD THE WEBSITE URL
+DEFAULT_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:*",
+    "http://127.0.0.1:*"
+]
+
 ALLOWED_ORIGINS: List[str] = (
     os.getenv("ALLOWED_ORIGINS", "").split(",")
     if os.getenv("ALLOWED_ORIGINS")
-    else []
+    else DEFAULT_ORIGINS
 )
 
 app = FastAPI(
@@ -31,11 +38,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
-    allow_headers=[
-        "API_KEY",
-        "Content-Type",
-    ],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
     expose_headers=["API_KEY"],
     max_age=int(os.getenv("CORS_MAX_AGE", "3600")),
 )

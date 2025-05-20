@@ -15,7 +15,7 @@ load_dotenv()
 ########################################################
 #           Settings
 ########################################################
-RATE_LIMIT_WINDOW = int(os.environ.get("RATE_LIMIT_WINDOW", "3600"))
+RATE_LIMIT_WINDOW: int = int(os.environ.get("RATE_LIMIT_WINDOW", "3600"))
 MAX_REQUESTS_PER_WINDOW = int(
     os.environ.get("MAX_REQUESTS_PER_WINDOW", "1000")
 )

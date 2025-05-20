@@ -39,6 +39,7 @@ clean:
 	rm -rf $(VENV)
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
+	rm -rf .pytest_cache .coverage
 
 test: install-dev
 	$(VENV_BIN)/pytest --cov=app --cov-report=term-missing
