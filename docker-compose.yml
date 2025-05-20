@@ -9,5 +9,5 @@ services:
       - .:/app
     environment:
       - PYTHONPATH=/app
-      - API_KEY=1nqDQcl12AYZctUhuVxvroI2CrLuG4pW
+    env_file: .env
     restart: unless-stopped 

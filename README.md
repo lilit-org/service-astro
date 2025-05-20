@@ -55,8 +55,38 @@ interactive api documentation: [localhost:8000/docs](http://localhost:8000/docs)
 to generate a new API key:
 
 ```bash
-make generate-api-key
+make key
 ```
+
+<br>
+
+you can then add this key to `.env`.
+
+<br>
+
+---
+
+### endpoints
+
+<br>
+
+#### `docs/`
+
+<br>
+
+```bash
+curl "http://localhost:8000/docs"
+```    
+
+<br>
+
+#### `planets/`
+
+<br>
+
+```bash
+curl "http://localhost:8000/planets?API_KEY"
+```    
 
 <br>
 

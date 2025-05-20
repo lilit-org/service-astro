@@ -1,13 +1,19 @@
+import os
+
 from fastapi.testclient import TestClient
 
 from app.main import app
+
+# Set test API key
+os.environ["API_KEY"] = "test_api_key"
+API_KEY_NAME = "zA5lvzxwOBLSbG0koNHU0g7flp9yfsHL"
 
 client = TestClient(app)
 
 
 def test_get_planets_current_time():
     """Test getting planetary positions for current time"""
-    response = client.get("/planets")
+    response = client.get("/planets", headers={API_KEY_NAME: "test_api_key"})
     assert response.status_code == 200
     data = response.json()
 
@@ -37,7 +43,11 @@ def test_get_planets_current_time():
 def test_get_planets_specific_time():
     """Test getting planetary positions for a specific time"""
     test_time = "2024-03-20T12:00:00"
-    response = client.post("/planets", json={"date_time": test_time})
+    response = client.post(
+        "/planets",
+        json={"date_time": test_time},
+        headers={API_KEY_NAME: "test_api_key"},
+    )
     assert response.status_code == 200
     data = response.json()
 
@@ -68,7 +78,11 @@ def test_get_planets_specific_time():
 
 def test_get_planets_invalid_time():
     """Test getting planetary positions with invalid time format"""
-    response = client.post("/planets", json={"date_time": "invalid-time"})
+    response = client.post(
+        "/planets",
+        json={"date_time": "invalid-time"},
+        headers={API_KEY_NAME: "test_api_key"},
+    )
     assert response.status_code == 422  # Validation error
 
 
