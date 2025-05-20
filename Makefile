@@ -7,7 +7,7 @@ HOST := 0.0.0.0
 PORT := 8000
 APP := app.main:app
 
-setup:
+install:
 	$(PYTHON) -m venv $(VENV)
 	$(VENV_BIN)/pip install --upgrade pip
 	$(VENV_BIN)/pip install -r requirements.txt
