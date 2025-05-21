@@ -4,6 +4,7 @@ from typing import List
 import dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.middleware.auth import APIKeyMiddleware
 from app.routers import ascendant, planets
@@ -32,6 +33,8 @@ app.add_middleware(
     max_age=int(os.getenv("CORS_MAX_AGE", "3600")),
 )
 
+# Mount static files
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 ########################################################
 #           Endpoints
