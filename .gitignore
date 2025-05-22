@@ -61,3 +61,7 @@ Pipfile
 .docker/
 docker-compose.override.yml
 .coverage
+
+# Personal scripts
+test_planets.sh
+test_ascendant.sh

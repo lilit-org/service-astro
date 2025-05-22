@@ -112,9 +112,26 @@ curl "http://localhost:8000/docs"
 <br>
 
 ```bash
-curl "http://localhost:8000/planets" -H "Content-Type: application/json" -H "API_KEY: <your-key>" -d '{"date_time": "1990-08-18T12:30:00", "latitude": -55.4284, "longitude": -19.2733}'
-
+curl "http://localhost:8000/planets" \
+    -H "Content-Type: application/json" \
+    -H "API_KEY: <api-key>" \
+    -d '{"date_time": "1993-01-18T15:30:00", "latitude": -45.3284, "longitude": -29.2733}' \
+    -v
 ```    
+
+<br>
+
+### `ascendant/`
+
+<br>
+
+```bash
+curl "http://localhost:8000/ascendant" \
+    -H "Content-Type: application/json" \
+    -H "API_KEY: <api-key>" \
+    -d '{"date_time": "1993-01-18T15:30:00", "latitude": -45.3284, "longitude": -29.2733}' \
+    -v
+```
 
 <br>
 

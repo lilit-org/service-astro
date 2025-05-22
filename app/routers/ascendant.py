@@ -1,38 +1,40 @@
-import ephem
+from datetime import timezone
+from typing import Any
+
+import swisseph as swe
 from fastapi import APIRouter
 
-from app.models import AscendantResponse, LocationRequest
+from app.models import LocationRequest
 from app.routers.planets import ROUND_DECIMALS, get_zodiac_sign
+from app.utils.astro_calculations import parse_tz_offset
 
 router = APIRouter()
 
 
-@router.post("/ascendant", response_model=AscendantResponse)
-async def get_ascendant(request: LocationRequest):
-    observer = ephem.Observer()
-    observer.date = request.date_time
-    observer.lat = str(request.latitude)
-    observer.lon = str(request.longitude)
-    sidereal_time = observer.sidereal_time() * 180 / ephem.pi
+@router.post("/ascendant", response_model=Any)
+async def get_ascendant(request: LocationRequest) -> dict[str, Any]:
+    dt = request.date_time
+    if request.tz_offset:
+        tz = parse_tz_offset(request.tz_offset)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=tz)
+        dt = dt.astimezone(timezone.utc).replace(tzinfo=None)
 
-    # calculate the ascendant
-    # the formula is: Ascendant = arctan(cos(obliquity) * sin(sidereal_time) /
-    # (cos(sidereal_time) * cos(latitude) - sin(obliquity) * sin(latitude)))
-    obliquity = ephem.Ecliptic(ephem.Sun()).lon * 180 / ephem.pi
-    cos_obl = ephem.cos(obliquity)
-    sin_obl = ephem.sin(obliquity)
-    cos_lat = ephem.cos(request.latitude)
-    sin_lat = ephem.sin(request.latitude)
-    cos_sid = ephem.cos(sidereal_time)
-    sin_sid = ephem.sin(sidereal_time)
-
-    numerator = cos_obl * sin_sid
-    denominator = cos_sid * cos_lat - sin_obl * sin_lat
-
-    ascendant = ephem.degrees(ephem.atan2(numerator, denominator))
-    if ascendant < 0:
-        ascendant += 360
-
+    jd_ut = swe.julday(
+        dt.year, dt.month, dt.day, dt.hour + dt.minute / 60 + dt.second / 3600
+    )
+    _, ascmc = swe.houses(jd_ut, request.latitude, request.longitude, b"A")
+    ascendant = ascmc[0]
     sign, degrees = get_zodiac_sign(ascendant)
 
-    return AscendantResponse(sign=sign, degrees=round(degrees, ROUND_DECIMALS))
+    return {
+        "sign": sign,
+        "degrees": round(degrees, ROUND_DECIMALS),
+        "debug": {
+            "input_datetime": str(request.date_time),
+            "datetime_utc": str(dt),
+            "longitude": request.longitude,
+            "latitude": request.latitude,
+            "ascendant": ascendant,
+        },
+    }
