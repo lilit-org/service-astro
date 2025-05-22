@@ -13,7 +13,6 @@ from app.utils.astro_calculations import ROUND_DECIMALS, get_zodiac_sign
 router = APIRouter()
 
 
-@router.get("/planets", response_model=PlanetaryPositionsResponse)
 @router.post("/planets", response_model=PlanetaryPositionsResponse)
 async def get_planetary_positions(request: DateTimeRequest = None):
     date_time = (

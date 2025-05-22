@@ -23,7 +23,7 @@ def client():
 
 def test_get_planets_current_time(client):
     """Test getting planetary positions for current time"""
-    response = client.get("/planets", headers={"API_KEY": TEST_API_KEY})
+    response = client.post("/planets", headers={"API_KEY": TEST_API_KEY})
     assert response.status_code == 200
     data = response.json()
 
