@@ -4,7 +4,7 @@
 
 <br>
 
-> a python-based api service for performing astrological calculations.
+> *a python-based api service for performing astrological calculations.*
 
 <br>
 
