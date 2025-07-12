@@ -1,10 +1,10 @@
-## LILIT's astrological API servrice
+## LILIT's basic astronomical API microservice 
 [![lint](https://github.com/lilit-org/service-astro/actions/workflows/lint.yml/badge.svg)](https://github.com/lilit-org/service-astro/actions/workflows/lint.yml)
 [![tests](https://github.com/lilit-org/service-astro/actions/workflows/tests.yml/badge.svg)](https://github.com/lilit-org/service-astro/actions/workflows/tests.yml)
 
 <br>
 
-> *a python-based api service for performing astrological calculations.*
+> *a python-based api service for performing astro calculations (planets positions and ascendant)*
 
 <br>
 
